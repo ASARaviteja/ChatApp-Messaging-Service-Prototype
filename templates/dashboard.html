@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="eng">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+        <title>Dashboard</title>
+    </head>
+    <body>
+        <div style="height: 100vh;">
+            <div class="top_panel">
+                <table width="100%">
+                    <tr>
+                        <td width="70%">
+                            <h1 style="margin-left: 20px;">
+                                <font color="lightgreen">{{uid}}'s Dashboard</font>
+                            </h1>
+                        </td>
+                        <td style="text-align: center;">
+                            <a href="{{ url_for('logout', user_id=uid) }}">
+                                <button class="btn custom-btn-success">Log Out</button>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="left_panel">
+                <table width="100%" class="right-aligned-table" style="padding: 15px;">
+                    <tr>
+                        <td style="text-align: center; padding: 10px;">
+                            <a href="{{ url_for('fetch_user', user_id=uid) }}" style="color: white;">
+                                <button class="btn" style="margin-bottom: 20px; margin-right:70px;">
+                                    <h3>Fetch User</h3>
+                                </button>
+                            </a>
+                            <div class="vertical-menu">
+                                {% for user in user_list %}
+                                    <a href="{{url_for('update_cid', user_id = uid, chat_id=user)}}">{{user}}</a>
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">
+                            <a href="{{ url_for('fetch_group', user_id=uid) }}"  style="color: white;">
+                                <button class="btn"  style="margin-bottom: 20px; margin-top: 10px; margin-right: 70px;">
+                                    <h3>Fetch Group</h3>
+                                </button>
+                            </a>
+                            <div class="vertical-menu">
+                                {% for group in group_list %}
+                                    <a href="{{url_for('update_cid',user_id=uid, chat_id=group)}}" style="margin-left: 10px;">{{group}}</a>
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="right_top_panel">
+                <table width="100%">
+                    <tr>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <h3>Chat Window</h3>
+                                    </td>
+                                    <td>
+                                        <a href="{{url_for('fetch_msgs', user_id=uid)}}"  style="color: white;">
+                                            <button class="btn" style="width: 100%; margin: 10px;">Fetch Messages</button>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <button class="btn" style="width: 100%; margin: 15px;" onclick="window.location.reload()">Refresh</button>
+                                    </td>
+                                </tr>
+                            </table>
+                            <h1 style="color: orange;">{{cid}}</h1>
+                            <table width="93%" style="font-size: 25px; font-weight: bold; text-align: center;">
+                                <tr>
+                                    <td width="50%">Message Text</td>
+                                    <td width="20%">Sender id</td>
+                                    <td width="20%">Time Stamp</td>
+                                    <td width="10%">Msg id</td>
+                                </tr>
+                            </table>
+                            <div class="vertical-menu2" id="chat_window">
+                                <table width="100%" style="font-size: 25px; padding: auto;" id="messageTable">
+                                    {% for msg in msg_list %}
+                                        <tr style="background-color: #cae0a2; color :black; text-align: center;">
+                                            <td width="50%">{{ msg_list[msg]['text'] }}</td>
+                                            <td width="20%">{{ msg_list[msg]['send_uid'] }}</td>
+                                            <td width="20%">{{ msg_list[msg]['timestamp'] }}</td>
+                                            <td width="10%">{{ msg }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <script>
+                                chatWindow = document.getElementById('chat_window');
+                                var xH = chatWindow.scrollHeight;
+                                chatWindow.scrollTo(0,xH);
+                            </script>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="right_bottom_panel" style="background-color: #6f42c1;">
+                <form action="{{url_for('send_msg', user_id=uid)}}" method="post">
+                    <table width="100%" style="margin: 10px;">
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control form-control-lg" name="typed_msg" placeholder="Type a message..."/>
+                            </td>
+                            <td>
+                                <button class="btn custom-btn-success" style="margin-left: 10px;">Send</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
